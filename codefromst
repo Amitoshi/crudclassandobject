@@ -1,0 +1,84 @@
+JQuery on Key Up Validation----------
+<input  onkeyup="return validate_text_field('txt_fellow_guide','error_fellow_guide','Fellow_Guide Required !!')"  >
+function validate_text_field(id, error_id, message) 
+			{
+                value = $('#' + id).val().trim();
+
+                if (value == '') {
+                    $('#' + error_id).html(message);
+                    $('#' + id).focus();
+                    $('#' + id).css('borderColor', 'red');
+                    $('#Submit').attr('disabled', true);
+                } 
+				else {
+                    $('#' + error_id).html('');
+                    $('#' + id).css('borderColor', '#d2d6de');
+                    $('#Submit').attr('disabled', false);
+                }
+            }
+			-----------------
+      <input onchange="return validate_ddl_field('ddl_city_id','error_city_id',' City Required !!')" >
+			 function validate_ddl_field(id, error_id, message) 
+			 {
+                value = $('#' + id).val().trim();
+
+                if (value == '0') {
+                    $('#' + error_id).html(message);
+                    $('#' + id).focus();
+                    $('#' + id).css('borderColor', 'red');
+                    $('#Submit').attr('disabled', true);
+                } 
+				else {
+                    $('#' + error_id).html('');
+                    $('#' + id).css('borderColor', '#d2d6de');
+                    $('#Submit').attr('disabled', false);
+                }
+            }
+ ON CLICK  validation---------------
+   <input type="submit"  onclick="return data_validation(); >
+ function data_validation() 
+		{
+      var txt_centre_name_id= $('#txt_centre_name').val().trim();
+			if (txt_centre_name_id == "") 
+			{
+				$('#error_centre_name').css('display', '').html('Centre Name Required !!');
+				document.getElementById('txt_centre_name').focus();
+
+				$('#txt_centre_name').css('borderColor', 'red');
+				$('#Submit').attr('disabled', true);
+				return false;
+			}
+    }
+    onKeyPress="return isNumberKey(event); in <input> VALIDATION
+    
+    function isNumberKey(evt)
+		{		 
+			var charCode = (evt.which) ? evt.which : event.keyCode
+			
+			if (charCode > 31 && (charCode < 48 || charCode > 57)&& charCode != 46)
+			{
+				return false;
+			}
+			else
+			{
+				return true;
+			}
+		}
+    JQuery GET DATA and PASS TO DIV ID
+    
+    function get_all_conference() 
+        { 
+            var mode = "get_all_conference";
+
+            jQuery.post("prg_study_centre_ajax.php", {
+                    "mode": mode,
+                },
+
+                function(data) {
+                    $('#get_study_centre').html(data);
+                });
+        }
+  -------------------------
+
+    
+    
