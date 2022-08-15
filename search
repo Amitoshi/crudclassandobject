@@ -1,0 +1,131 @@
+search.php---------------
+
+<?php
+include "lib/config.php";
+include "lib/header.php";
+?>
+
+
+ <!-- breadcrumb-area start -->
+    <div class="breadcrumb-area" style="height: 100px; margin-bottom: 50px;">
+        <div class="container">
+            <div class="row align-items-center justify-content-center">
+                <div class="col-12 text-center">
+                    <h2 class="breadcrumb-title">Results for: <b><?php print $_GET['q'];?></b></h2>
+                    <!-- breadcrumb-list start -->
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- breadcrumb-area end -->
+
+
+    <div class="container">
+        <div class="row">
+        	<?php
+        	include "lib/category.php";
+        	?>
+            <div class="col-9">
+				<?php
+
+            		$q = $_GET['q'];
+            		$q = str_ireplace(  [",", "+", ";", " AND ", "."]  , " ", $q);
+
+            		$sql = "SELECT * FROM `products`, `category` 
+            					    WHERE `products`.`cid` = `category`.`cid` ";
+
+            		$keywords = explode(" ", trim($q) );  // Egg Biriyani
+            		foreach ($keywords as $keyword) {
+            			
+            			$sql = $sql . " AND (
+            					`products`.`name` LIKE '%$keyword%' OR 
+            					`products`.`details` LIKE '%$keyword%' OR 
+            					`category`.`cname` LIKE '%$keyword%'  
+            				) ";
+            		}
+
+            		if( isset($_GET['price']) ) {
+
+            			if($_GET['price'] == "asc") {
+            		        $sql = $sql . " ORDER BY `products`.`price` ASC ";
+							$next_price = "desc";
+            			} else {
+            				$sql = $sql . " ORDER BY `products`.`price` DESC ";
+							$next_price = "asc";
+            			}
+            		}
+            		else 
+            			$next_price = "";
+
+
+                    $res = $db->query($sql);
+                    $num = $res->num_rows;
+
+            		print '<div class="row">
+            			<div class="col">
+            				<hr><h3>Found '.$num.' results for <b>'.$q.'</b></h3><hr>
+            			</div>
+            		</div>';
+
+            		if($next_price=="" || $next_price=="asc")
+            			print 'Sort by <a href = "search.php?q='.$q.'&price=asc">Price <img src = "./assets/images/price_down.png" width = 20></a>';
+            		else
+            			print 'Sort by <a href = "search.php?q='.$q.'&price=desc">Price <img src = "./assets/images/price_up.png" width = 20></a>';
+
+            		print '<div class="row">';
+                    
+                    while($row = $res->fetch_array()) {
+      					displayProduct($row);
+					}
+					print '</div>';
+
+					
+function displayProduct($row)
+{
+	              	print <<<EOF
+            		<!-- start product div -->
+            		<div class="col-4">
+		                <div class="product">
+		                    <div class="thumb">
+		                        <a href="details.php?id=$row[id]" class="image">
+		                            <img src="$row[image]" style = "height: 200px;" />
+		                            <img class="hover-image"
+		                                src="$row[image]" alt="Product" />
+		                        </a>
+		                         
+		                    </div>
+		                    <div class="content">
+		                        <span class="ratings">
+		                            <span class="rating-wrap">
+		                                <span class="star" style="width: 100%"></span>
+		                            </span>
+		                            <span class="rating-num d-none">( 5 Review )</span>
+		                        </span>
+		                        <h5 class="title"><a href="details.php?id=$row[id]">$row[name]
+		                            </a>
+		                        </h5>
+		                        <span class="price">
+		                            <span class="new">$row[price]</span>
+		                            <span class="old">$45.50</span>
+		                        </span>
+		                    </div>
+		                    
+		                </div>
+            		</div>
+            		<!-- end product div ---->
+EOF;
+}
+					?>
+
+             </div>
+        </div>
+    </div>
+
+
+
+
+<?php
+include "lib/footer.php";
+?>
+
+----------------------------END-------------------------
