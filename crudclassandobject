@@ -85,7 +85,9 @@ if(isset($_POST['submit']))
 
                 </tr>
                 <tr>
-                    <td colspan="4" align="right"><input type="submit" onclick="data_validation()" name="submit" id="submit" value="<?php if(isset($_GET['id'])){ echo 'Update';} else{ echo 'Save';} ?>"></td>
+                    <td colspan="4" align="right"><input type="submit" onclick="data_validation()" name="submit" id="submit" value="<?php if(isset($_GET['id'])){ echo 'Update';} else{ echo 'Save';} ?>">
+		    <input type="reset" value="<?php if(@$_GET['id']){?> Cancel <?php } else {?> Reset <?php }?>" onclick="location.href='./myindex.php';" style="width:80px; margin-top:6px;"/>
+		    </td>
                 </tr>
             </table>
         </form>
