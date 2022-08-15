@@ -1,0 +1,399 @@
+myindex.php------------------
+
+<?php
+include('databse.php');
+include('query.php'); 
+$obj_crud = new crud();
+?>
+
+<?php 
+if(isset($_GET['delete_id']))
+{
+    
+     $sql_query="UPDATE tb_user
+            SET
+                deleted=1
+                
+              WHERE 
+                  (id='$_GET[delete_id]')";
+    //    echo $sql_query;exit;
+       mysqli_query($conn,$sql_query);
+     
+     echo "<script>
+             window.location='./myindex.php';
+     </script>";
+}
+?>
+
+<?php
+if(isset($_GET['id']))
+{
+    // echo $_GET['id']; 
+    $obj_crud->id=$_GET['id'];
+    $obj_crud->get_data_by_id($conn);
+    
+}
+
+
+
+if(isset($_POST['submit'])) 
+{
+    // print'<pre>';
+    // print_r($_FILES['image']);die();
+    
+    // $obj_crud->id=0;
+    $obj_crud->name=trim($_POST['name']);
+    $obj_crud->no=trim($_POST['no']);
+    $obj_crud->email=trim($_POST['email']);
+    $obj_crud->image= $_FILES['image'];
+    $obj_crud->insert($conn);
+
+}
+
+?>
+
+<!DOCTYPE html>
+<html> 
+    <head>
+    </head>
+    <body class="container">
+        <h1>Register</h1>
+        <form method="post" enctype="multipart/form-data" >
+            <table border='1' cellpadding='20'cellspacing='0'>
+                <tr > 
+                    <th>Name</th>
+                    <th>No</th>
+                    <th>Email</th>
+                    <th>Photo</th>
+                </tr>
+                <tr>
+                    <?php //while($data = mysqli_fetch_assoc($result)){ }?>
+                    <td> <input type="text" name="name" id="name" onkeyup="return validate_text_field('name','error_name','Name Required ') " value="<?php if(isset($obj_crud->name)) {echo $obj_crud->name; }?>"> <br>
+                    <span id="error_name"style="color:red; float:left;"></span>
+                </td>
+                
+                    <td> <input type="text" name="no" id="no" value="<?php if(isset($obj_crud->no)){ echo $obj_crud->no;} ?>" onkeyup="return validate_text_field('no','error_no',' No Required ')  "><br>
+                    <span id="error_no"style="color:red; float:left;"></span></td>
+
+                    <td> <input type="text" name="email" id="email" value="<?php if(isset($obj_crud->email)){ echo $obj_crud->email;} ?>" onkeyup="return validate_text_field('email','error_email',' Email Required ') "><br>
+                    <span id="error_email"style="color:red; float:left;"></span></td>
+                    
+                    <td> <input type="file" name="image" id="image" onchange="sss(this);" > 
+                    <img <?php if(isset($obj_crud->image)){  ?> src="images/<?php echo $obj_crud->image; } else { echo 'No Image Found';} ?>" style="width:90px ;" id="thumb_image">
+                <!-- <img id="thumb_image"> -->
+                </td>
+
+                </tr>
+                <tr>
+                    <td colspan="4" align="right"><input type="submit" onclick="data_validation()" name="submit" id="submit" value="<?php if(isset($_GET['id'])){ echo 'Update';} else{ echo 'Save';} ?>"></td>
+                </tr>
+            </table>
+        </form>
+       
+        <div id="list_to_id"></div>
+        <script src="js/custom-file-input.js">
+            
+        </script>
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+	
+        <script>
+            get_all_data();
+            function validate_text_field(id,error_id,message)
+			{
+				value = $('#'+id).val().trim();
+			
+				if(value == '')
+				{
+					$('#'+error_id).html(message);
+					$('#'+id).focus();
+					$('#'+id).css('borderColor','red');
+					$('#submit').attr('disabled',true);
+				}
+				else
+				{
+					$('#'+error_id).html('');
+					$('#'+id).css('borderColor','#d2d6de');
+					$('#submit').attr('disabled',false);
+				}
+			}
+            function data_validation()
+			{
+                var name = $("#name").val().trim();
+				if(name =="")
+				{	
+					$('#error_name').css('display','').html('Name is Required !!');
+					document.getElementById('name').focus();
+					
+					$('#name').css('borderColor','red');
+					$('#submit').attr('disabled',true);
+					return false;
+				}
+            
+            
+            
+                var no = $("#no").val().trim();
+                
+                var regex = /^[6-9][0-9]{9}$/;
+                if(no == '')
+                {
+					$('#error_no').css('display','').html('No required');
+					document.getElementById('no').focus();
+					
+					$('#no').css('borderColor','red');
+					$('#submit').attr('disabled',true);
+					return false;
+				}
+				if(!regex.test(no))
+				{	
+                    // alert('not a no'); exit();
+					$('#error_no').css('display','').html('Invalid No!!');
+					document.getElementById('no').focus();
+					
+					$('#no').css('borderColor','red');
+					$('#submit').attr('disabled',true);
+					return false;
+				}
+                var email = $('#email').val().trim();
+                var regex_email = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+
+                if(email == ''){
+                    $('#error_email').css('display','').html('Email is required');
+                    $('#email').css('borderColor','red');
+					$('#submit').attr('disabled',true);
+                    return false;
+                    
+                }
+
+                
+                if(!regex_email.test(email)){
+                    $('#error_email').css('display','').html('Invalid Email');
+                    $('#email').css('borderColor','red');
+                    $('#submit').attr('disabled',true);
+                    
+                }
+            
+            }
+            function sss(input) // For Instace image view under thumnail
+            {
+                if (input.files && input.files[0]) {
+                var reader = new FileReader();
+
+                reader.onload = function (e) {
+                    $('#thumb_image')
+                        .attr('src', e.target.result)
+                        .width(50)
+                        .height(50);
+                };
+                reader.readAsDataURL(input.files[0]);
+                }
+            }
+            function get_all_data() 
+            { 
+		
+            var mode = "get_all_data";
+
+            jQuery.post("list_ajax.php", {
+                    "mode": mode,
+                },
+
+                function(data) {
+                    $('#list_to_id').html(data);
+                });
+            }
+            function delete_id(id)
+            {
+                if(confirm('Sure To Remove This Record ?'))
+                {
+                    window.location.href='myindex.php?delete_id='+id;
+                }
+}
+    
+        </script>
+    </body>
+</html>
+
+query.php--------------
+
+<?php 
+include('databse.php');
+
+class crud{
+
+    function insert($conn)
+    {
+
+        if(!isset($this->id))
+        {
+            
+            $date = date("Y-m-d h:i:s");
+            // -------------------
+            if($_FILES["image"]!="")
+            {     
+                $tempname=$_FILES["image"]["tmp_name"]; 
+                $originalname=$_FILES["image"]["name"];
+                $size=($_FILES["image"]["size"]/ 524555552880) . " MB<br>"; 
+                $type=$_FILES["image"]["type"];		
+                $thumbnail_picture_path=uniqid().$_FILES["image"]["name"];
+                
+                // move_uploaded_file($_FILES["fl_image"]["tmp_name"],"$_SERVER[DOCUMENT_ROOT]/images/".$thumbnail_picture_path);
+                move_uploaded_file($_FILES["image"]["tmp_name"],"images/".$thumbnail_picture_path);
+        
+            } 
+            if($originalname=="")
+            {
+            $thumbnail_picture_path="";
+            }
+            
+            
+
+            // ------------------
+            $query = "INSERT INTO `tb_user`(
+                name,
+                number,
+                email,
+                image,
+                upload_date,
+                deleted
+            )
+            VALUES(
+                '$_POST[name]',
+                '$_POST[no]',
+                '$_POST[email]',
+                '$thumbnail_picture_path',
+                '$date',
+                '0'
+                
+            )";
+
+            // echo $query;exit;
+            // mysqli_query($conn,$query);
+        }
+        elseif(isset($this->id))
+        {
+            // print "hi";
+            if($_FILES["image"]!="")
+            {     
+                $tempname=$_FILES["image"]["tmp_name"]; 
+                $originalname=$_FILES["image"]["name"];
+                $size=($_FILES["image"]["size"]/ 524555552880) . " MB<br>"; 
+                $type=$_FILES["image"]["type"];		
+                $thumbnail_picture_path=uniqid().$_FILES["image"]["name"];
+                
+                // move_uploaded_file($_FILES["fl_image"]["tmp_name"],"$_SERVER[DOCUMENT_ROOT]/images/".$thumbnail_picture_path);
+                move_uploaded_file($_FILES["image"]["tmp_name"],"images/".$thumbnail_picture_path);
+        
+            } 
+            $query="UPDATE 
+                        tb_user 
+                    SET
+                        name='$this->name',
+                        number='$this->no',
+                        email='$this->email'";
+                    if($originalname!="")
+                    {
+                        $query.=" ,image='$thumbnail_picture_path'";
+                    }
+                    $query.=" WHERE (id='$this->id')";
+                    // echo $query;exit;
+                    // mysqli_query($conn,$query);
+        }
+        if(mysqli_query($conn,$query))
+			{
+				echo "<script language='javascript' type='text/javascript'>
+						alert(' Application Successfully Updated');
+						window.location = './myindex.php';
+						window.opener.location.reload();
+					</script>";	
+			}
+			else
+			{
+				echo "<script language='javascript' type='text/javascript'>
+					alert(' Application has not Updated');
+					</script>";
+			
+			}	
+
+    
+        
+    }
+    function get_all_data($conn)
+    {
+        $getdata = "SELECT * FROM `tb_user` WHERE `deleted` = 0";
+        $result = mysqli_query($conn,$getdata);
+        return $result;
+    }
+    function get_data_by_id($conn)
+    {
+        $getdatabyid = "SELECT * FROM `tb_user` WHERE `id` = $this->id";
+        $data = mysqli_fetch_assoc(mysqli_query($conn,$getdatabyid));
+        
+        $this->name=$data['name'];
+        $this->no=$data['number'];
+        $this->email=$data['email'];
+        $this->image=$data['image'];
+    }
+    
+}
+
+
+?>
+list_ajax.php--------------------------
+
+<?php 
+include("query.php");
+
+   
+$obj_crud = new crud();
+$mode = $_POST['mode']; 
+if($mode == 'get_all_data')
+{
+
+    $list = $obj_crud->get_all_data($conn);
+    $num_rows = mysqli_num_rows($list);
+    if($num_rows > 0)
+    {
+?>
+        <h2>LIST</h2>
+        <table border='1' cellpadding='20'cellspacing='0'>
+            <tr > 
+                <th>Name</th>
+                <th>No</th>
+                <th>Email</th>
+                <th>Photo</th>
+                <th>Action</th>       
+            </tr>
+            
+                <?php 
+
+                while($data = mysqli_fetch_assoc($list)){
+                ?>
+                <tr>
+                <td><?php  echo $data['name']; ?></td>
+                <td><?php  echo $data['number']; ?></td>
+                <td><?php  echo $data['email']; ?></td>
+                <td> <img src="images/<?php  echo $data['image']; ?>" style=" width: 75px; height: 60px; "></td>
+                <td><a href="myindex.php?id=<?php  echo $data['id']; ?>" > Edit </td>
+                <td> <a style="color:black;" href="javascript:delete_id(<?php echo $data['id']; ?>)">Delete</a></td>
+
+                
+            </tr>
+
+            <?php 
+                }
+            ?>
+            </table>
+        <?php 
+            } 
+}
+?>
+databse.php-------------------------
+
+<?php
+$host="localhost";
+	$username="root";
+	$password="";
+	$dbname="register"; 
+    $conn = mysqli_connect($host,$username,$password,$dbname);
+    date_default_timezone_set('Asia/Calcutta');
+    -------------------------------------------------------End------------------------------------------------------
+
