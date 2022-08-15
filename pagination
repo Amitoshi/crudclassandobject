@@ -1,0 +1,64 @@
+<center>
+<?php
+$db = new MySQLi("localhost","root",NULL,"db9");
+
+if(isset($_GET['p'])){
+	$page=$_GET['p'];
+}
+else { $page=1; }
+
+
+$limit= ($page-1)*10; //1*10=10;          
+$sql = "SELECT * FROM `paging` LIMIT $limit,10 ";
+$res= $db->query($sql);
+
+echo "<table cellpadding= 12 border= 10 width=50%>
+	<tr>
+		<th>id</th>
+		<th>Name</th> </tr>
+	 
+";
+
+while($row=$res->fetch_array()){
+	echo" <tr> 
+	<td>$row[id]</td>
+	<td>$row[fullname]</td>   </tr>   ";
+			    }
+
+echo"</table>";
+
+
+//totalpage ->
+$sql = "SELECT * FROM `paging`";
+$res= $db->query($sql);
+$rows = $res->num_rows;
+$total_pages=ceil($rows/10); 
+// <-
+
+////previus page code ->
+
+
+$prev = $page-1;
+if ($prev>=1) {
+echo "<table width=40% border=10 cellpadding=12><th><a href = 'pagi.php?p=$prev'><- Previous </a></th> &nbsp;&nbsp;&nbsp;";
+}
+echo "<br><br><br>";
+
+//for 1,2,3,4,5.. page->
+for($i=1; $i<=$total_pages; $i++) {
+	if ($i!=$page) {    print " <a href = 'pagi.php?p=$i'>$i</a>&nbsp;&nbsp;&nbsp;";}
+
+	else           {    print " <a href = '#'>$i</a>&nbsp;&nbsp;&nbsp;";            }
+	
+		
+} 
+//<-
+echo "<br><br><br>";
+
+if($page<$total_pages){
+	$next=$page+1;
+	echo"<th ><a href = 'pagi.php?p=$next'>Next Page -> </a></th></table>";
+}
+
+?>
+-----------------------------END ---------------------
