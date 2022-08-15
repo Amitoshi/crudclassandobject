@@ -1,0 +1,233 @@
+https://programmingwithvishal.com/demo/pattern/
+
+
+
+
+Pattern 1
+*
+*  *
+*  *  *
+*  *  *  *
+*  *  *  *  *
+for($i=1;$i<=5;$i++){
+  for($j=1;$j<=$i;$j++){
+	echo " * ";
+  }
+  echo '</br>';
+}
+					
+Pattern 2
+1
+2  2
+3  3  3
+4  4  4  4
+5  5  5  5  5
+for($i=1;$i<=5;$i++){
+  for($j=1;$j<=$i;$j++){
+	echo " $i ";
+  }
+  echo '</br>';
+}
+				
+Pattern 3
+1
+1 2
+1  2  3
+1  2  3  4
+1  2  3  4  5
+for($i=1;$i<=5;$i++){
+  for($j=1;$j<=$i;$j++){
+	echo " $j ";
+  }
+  echo '</br>';
+}
+				
+Pattern 4
+*  *  *  *  *
+*  *  *  *
+*  *  *
+* *
+*
+for($i=5;$i>=1;$i--){
+  for($j=1;$j<=$i;$j++){
+	echo " * ";
+  }
+  echo '</br>';
+}
+				
+Pattern 5
+5  5  5  5  5
+4  4  4  4
+3  3  3
+2 2
+1
+for($i=5;$i>=1;$i--){
+  for($j=1;$j<=$i;$j++){
+	echo " $i ";
+  }
+  echo '</br>';
+}
+				
+Pattern 6
+1  2  3  4  5
+1  2  3  4
+1  2  3
+1 2
+1
+for($i=5;$i>=1;$i--){
+  for($j=1;$j<=$i;$j++){
+	echo " $j ";
+  }
+  echo '</br>';
+}
+				
+Pattern 7
+       *
+     * * *
+   * * * * *
+* * * * * * *
+$n=5;
+for($i=1;$i<=$n;$i++){
+	for($j=1;$j<=(2*$n)-1;$j++){
+		if($j>=$n-($i-1) && $j<=$n+($i-1)){
+			echo "*";
+		}else{
+			echo "& nbsp;& nbsp;";
+			//remove spave between & and nbsp
+		}
+	}
+	echo '</br>';
+}
+				
+Pattern 8
+V
+V I
+V I S
+V I S H
+V I S H A
+V I S H A L
+$str="VISHAL";
+$count=strlen($str);
+for($i=0;$i<$count;$i++){
+	for($j=0;$j<=$i;$j++){
+		echo " $str[$j] ";
+	}
+	echo '</br>';
+}
+
+				
+Pattern 9
+V I S H A L
+V I S H A
+V I S H
+V I S
+V I
+V
+$str="VISHAL";
+$count=strlen($str);
+for($i=6;$i>=0;$i--){
+	for($j=0;$j<$i;$j++){
+		echo " $str[$j] ";
+	}
+	echo '</br>';
+}
+
+				
+Pattern 10
+*****
+*    *
+*    *
+*    *
+*****
+$n=5;
+for($i=1;$i<=$n;$i++){
+	for($j=1;$j<=$n;$j++){
+		if($i==1 || $i==$n){
+			echo "*";
+		}else{
+			if($j==1 || $j==$n){
+				echo "*";
+			}else{
+				echo "& nbsp;& nbsp;";
+			//remove spave between & and nbsp
+			}
+		}
+	}
+	echo '</br>';
+}
+				
+Pattern 11
+*
+  *
+    *
+      *
+        *
+$n=5;
+for($i=1;$i<=$n;$i++){
+	for($j=1;$j<=$n;$j++){
+		if($j==$i){
+			echo " * ";
+		}else{
+			echo "& nbsp;& nbsp;& nbsp;";
+			//remove spave between & and nbsp
+		}
+	}
+	echo '</br>';
+}
+
+		
+Pattern 12
+*            *
+   *      *  
+      *      
+    *     *    
+*            *
+$n=5;
+for($i=1;$i<=$n;$i++){
+	for($j=1;$j<=$n;$j++){
+		if($j==$i || $i+$j==$n+1){
+			echo " * ";
+		}else{
+			echo "& nbsp;& nbsp;& nbsp;";
+			//remove spave between & and nbsp
+		}
+	}
+	echo '</br>';
+}
+
+		
+Pattern 13
+        *
+      * * *
+   * * * * *
+ * * * * * * *
+   * * * * *
+     * * *
+       *
+$n=4;
+
+for($i=1;$i<=$n;$i++){
+	for($j=1;$j<=(2*$n)-1;$j++){
+		if($j>=$n-($i-1) && $j<=$n+($i-1)){
+			echo "*";
+		}else{
+			echo "& nbsp;& nbsp;";
+			//remove spave between & and nbsp
+		}
+	}
+	echo '</br>';
+}
+
+for($i=$n-1;$i>=1;$i--){
+	for($j=1;$j<=(2*$n)-1;$j++){
+		if($j>=$n-($i-1) && $j<=$n+($i-1)){
+			echo "*";
+		}else{
+			echo "& nbsp;& nbsp;";
+			//remove spave between & and nbsp
+		}
+	}
+	echo '</br>';
+}
+
+		
